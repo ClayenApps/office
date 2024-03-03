@@ -1,0 +1,44 @@
+version: "3.7"
+
+services:
+  web:
+    container_name: ${COMPOSE_PROJECT_NAME}-web
+    image: office/web
+    build: web
+    restart: unless-stopped
+    init: true
+    expose: [ 3000 ]
+    depends_on: [ api ]
+    networks: [ public ]
+
+  api:
+    container_name: ${COMPOSE_PROJECT_NAME}-api
+    image: office/api
+    build: api
+    restart: unless-stopped
+    init: true
+    expose: [ 3000 ]
+    networks: [ public, internal ]
+
+  db:
+    image: postgres
+    restart: unless-stopped
+    expose: [ 5432 ]
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: example
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    networks: [ internal ]
+
+  adminer:
+    image: adminer
+    restart: "no"
+    expose: [ 8080 ]
+    depends_on: [ db ]
+    profiles: [ adminer ]
+    networks: [ internal ]
+
+networks:
+  public:
+  internal:
