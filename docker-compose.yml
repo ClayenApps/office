@@ -3,7 +3,6 @@ version: "3.7"
 services:
   web:
     container_name: ${COMPOSE_PROJECT_NAME}-web
-    image: office/web
     build: web
     restart: unless-stopped
     init: true
@@ -13,7 +12,6 @@ services:
 
   api:
     container_name: ${COMPOSE_PROJECT_NAME}-api
-    image: office/api
     build: api
     restart: unless-stopped
     init: true
