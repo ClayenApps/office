@@ -2,8 +2,8 @@ version: "3.7"
 
 services:
   web:
+    image: ghcr.io/clayenapps/office-web:latest
     container_name: ${COMPOSE_PROJECT_NAME}-web
-    image: office/web
     build: web
     restart: unless-stopped
     init: true
@@ -12,8 +12,8 @@ services:
     networks: [ public ]
 
   api:
+    image: ghcr.io/clayenapps/office-api:latest
     container_name: ${COMPOSE_PROJECT_NAME}-api
-    image: office/api
     build: api
     restart: unless-stopped
     init: true
