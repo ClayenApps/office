@@ -1,7 +1,7 @@
 import type { Form, Question } from "$lib/forms";
-import type { PageServerLoad } from "./$types";
+import type { LayoutServerLoad } from "./$types";
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: LayoutServerLoad = async ({ params }) => {
     return {
         form: {
             id: params.id,
