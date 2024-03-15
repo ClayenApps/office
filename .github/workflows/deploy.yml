@@ -1,30 +1,38 @@
-name: Build and deploy containers
+name: Deploy project
 permissions: write-all
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   workflow_dispatch:
 
 jobs:
-
-  web:
-    name: Deploy web
-    uses: './.github/workflows/docker-ghcr.yml'
+  build-and-push:
+    name: ${{ matrix.image }}
+    strategy:
+      fail-fast: true
+      matrix:
+        image: [web, api]
+    uses: ClayenApps/actions/.github/workflows/docker-ghcr.yml@main
     with:
-      service: web
+      service: ${{ matrix.image }}
 
-  api:
-    name: Deploy api
-    uses: './.github/workflows/docker-ghcr.yml'
+  deploy:
+    name: Deploy
+    needs: build-and-push
+    uses: ClayenApps/actions/.github/workflows/portainer-redeploy.yml@main
     with:
-      service: api
+      apiUrl: "https://admin.clayenkitten.ru/docker/api"
+      serviceId: ${{ vars.PORTAINER_SERVICE_ID }}
+      endpointId: ${{ vars.PORTAINER_ENDPOINT_ID }}
+    secrets:
+      token: ${{ secrets.PORTAINER_ACCESS_TOKEN }}
 
   notify:
     name: Send Telegram report
     runs-on: ubuntu-latest
     if: ${{ always() }}
-    needs: [web, api]
+    needs: [build-and-push, deploy]
 
     steps:
       - name: Send telegram message
@@ -35,8 +43,11 @@ jobs:
           format: markdown
           disable_web_page_preview: true
           message: |
-            Deployment workflow at [${{ github.repository }}](${{github.server_url}}/${{ github.repository }}) completed.
+            **[${{ github.repository }}](${{github.server_url}}/${{ github.repository }})**
 
-            Containers:
-            - [web](https://ghcr.io/clayenapps/office-web): ${{ needs.web.result }}
-            - [api](https://ghcr.io/clayenapps/office-api): ${{ needs.api.result }}
+            Deploy workflow completed.
+
+            Build: ${{ needs.build-and-push.result }}
+            Deploy: ${{ needs.deploy.result }}
+
+            See: https://office.clayenkitten.ru
