@@ -9,7 +9,7 @@
 </svelte:head>
 
 <main>
-    {#each data.forms as form}
+    {#each data.forms as form, i}
         {@const too_early = form.opens_at && form.opens_at > new Date()}
         {@const too_late = form.closes_at && form.closes_at < new Date()}
         {@const locked = too_early || too_late}
@@ -41,10 +41,19 @@
                     />
                 </button>
                 {#if form.owns}
-                    <button on:click|preventDefault={() => {}}>
+                    <button
+                        on:click|preventDefault={() => {
+                            form.name = prompt("Type new name", form.name) ?? form.name;
+                        }}
+                    >
                         <img src="/icons/rename.svg" alt="Rename" />
                     </button>
-                    <button on:click|preventDefault={() => {}}>
+                    <button
+                        on:click|preventDefault={() => {
+                            data.forms.splice(i, 1);
+                            data.forms = data.forms;
+                        }}
+                    >
                         <img src="/icons/delete.svg" alt="Delete" />
                     </button>
                 {/if}
@@ -112,6 +121,7 @@
 
         --color: #{$primary};
         &.locked {
+            cursor: not-allowed;
             --color: #{$disabled};
         }
         &.completed {
@@ -169,6 +179,9 @@
                 img {
                     width: 100%;
                     height: 100%;
+                    &[src$="full.svg"] {
+                        filter: invert(100%) sepia(85%) saturate(2356%) hue-rotate(336deg);
+                    }
                 }
                 padding: 4px;
 
