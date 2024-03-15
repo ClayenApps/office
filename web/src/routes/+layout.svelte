@@ -22,18 +22,16 @@
 <div id="wrapper">
     <header>
         <h1>Clayen{appName}</h1>
-        <nav>
-            <a href={`/${app}`}>Home</a>
-            <button use:melt={$trigger}>
-                <img src="https://avatars.githubusercontent.com/u/1162160?v=4" alt="Profile" />
-            </button>
-            <div class="dropdown-menu" use:melt={$menu}>
-                <button class="item" use:melt={$item}>Owned forms</button>
-                <button class="item" use:melt={$item}>Pending forms</button>
-                <button class="item" use:melt={$item}>Sign out</button>
-                <div class="arrow" use:melt={$arrow} />
-            </div>
-        </nav>
+        <a href={`/${app}`}>Home</a>
+        <button use:melt={$trigger}>
+            <img src="https://avatars.githubusercontent.com/u/1162160?v=4" alt="Profile" />
+        </button>
+        <div class="dropdown-menu" use:melt={$menu}>
+            <button class="item" use:melt={$item}>Owned forms</button>
+            <button class="item" use:melt={$item}>Pending forms</button>
+            <button class="item" use:melt={$item}>Sign out</button>
+            <div class="arrow" use:melt={$arrow} />
+        </div>
     </header>
     <slot />
     <nav class="footer-nav" aria-label="Footer">
@@ -88,7 +86,7 @@
 
     header {
         display: flex;
-        justify-content: space-between;
+        align-items: center;
 
         width: 100%;
         height: 70px;
@@ -99,42 +97,39 @@
             display: flex;
             align-items: center;
             padding-left: 16px;
+            margin-right: auto;
 
             color: $text-contrast;
             font-size: 28px;
         }
 
-        > nav {
-            flex: 1;
-            display: flex;
-            justify-content: end;
-            align-items: center;
-            gap: 16px;
-            > a {
-                color: $text-contrast;
-                text-decoration: none;
-                &:hover {
-                    filter: brightness(85%);
-                }
+        > a {
+            color: $text-contrast;
+            text-decoration: none;
+            &:hover {
+                filter: brightness(85%);
             }
-            > button {
-                display: block;
+        }
+        > button {
+            display: block;
+
+            aspect-ratio: 1;
+            height: 100%;
+            padding: 12px;
+            margin-left: 16px;
+
+            background-color: transparent;
+            overflow: hidden;
+            > img {
                 aspect-ratio: 1;
                 height: 100%;
-                background-color: transparent;
-                padding: 8px;
-                overflow: hidden;
-                > img {
-                    aspect-ratio: 1;
-                    height: 100%;
-                    border-radius: 999px;
-                    cursor: pointer;
-                }
-                &:hover > img {
-                    box-sizing: content-box;
-                    border: 2px solid hsl(0, 0%, 85%, 0.5);
-                    margin: -2px;
-                }
+                border-radius: 999px;
+                cursor: pointer;
+            }
+            &:hover > img {
+                box-sizing: content-box;
+                border: 2px solid hsl(0, 0%, 85%, 0.5);
+                margin: -2px;
             }
         }
     }
