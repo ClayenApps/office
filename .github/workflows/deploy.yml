@@ -43,5 +43,5 @@ jobs:
         Deploy: ${{ needs.deploy.result }}
       additional_buttons: '[{ "text": "Website", "url": "https://office.clayenkitten.ru" }]'
     secrets:
-      chat_id: ${{ secrets.TELEGRAM_TO }}
+      chat_id: ${{ secrets.TELEGRAM_CHAT }}
       token: ${{ secrets.TELEGRAM_TOKEN }}
