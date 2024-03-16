@@ -28,7 +28,7 @@ services:
     environment:
       POSTGRES_PASSWORD: example
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - db:/var/lib/postgresql/data
     networks: [ internal ]
 
   adminer:
@@ -42,3 +42,7 @@ services:
 networks:
   public:
   internal:
+
+
+volumes:
+  db:
