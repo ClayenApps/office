@@ -30,11 +30,10 @@ jobs:
 
   notify:
     name: Send Telegram report
-    runs-on: ubuntu-latest
     if: ${{ always() }}
     needs: [build-and-push, deploy]
-
-    env:
+    uses: ClayenApps/actions/.github/workflows/telegram-notify.yml@main
+    with:
       message: |
         *${{ github.repository }}*
         Project deployed successfully\\.
@@ -42,42 +41,7 @@ jobs:
         *Status*
         Build: ${{ needs.build-and-push.result }}
         Deploy: ${{ needs.deploy.result }}
-      repositoryBtn: |
-        {
-            "text": "Repository",
-            "url": "${{github.server_url}}/${{ github.repository }}"
-        }
-      websiteBtn: |
-        {
-          "text": "Website",
-          "url": "https://office.clayenkitten.ru"
-        }
-      workflowBtn: |
-        {
-          "text": "Workflow",
-          "url": "${{github.server_url}}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-        }
-
-    steps:
-      - name: Escape message
-        id: escape
-        run: echo "message=${message//$'\n'/\\n}" >> "$GITHUB_OUTPUT"
-
-      - name: Send telegram message
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMessage
-          method: "POST"
-          data: |
-            {
-              "chat_id": "${{ secrets.TELEGRAM_TO }}",
-              "text": "${{ steps.escape.outputs.message }}",
-              "reply_markup": {
-                  "inline_keyboard": [
-                    [${{ env.repositoryBtn }}, ${{ env.workflowBtn }}],
-                    [${{ env.websiteBtn }}]
-                  ]
-              },
-              "parse_mode": "MarkdownV2",
-              "link_preview_options": { "is_disabled": true }
-            }
+      additional_buttons: '[{ "text": "Website", "url": "https://office.clayenkitten.ru" }]'
+    secrets:
+      chat_id: ${{ secrets.TELEGRAM_TO }}
+      token: ${{ secrets.TELEGRAM_TOKEN }}
