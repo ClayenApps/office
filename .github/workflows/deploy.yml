@@ -1,4 +1,4 @@
-name: Deploy project
+name: Deploy
 permissions: write-all
 
 on:
@@ -20,7 +20,7 @@ jobs:
   deploy:
     name: Deploy
     needs: build-and-push
-    uses: ClayenApps/actions/.github/workflows/portainer-redeploy.yml@main
+    uses: ClayenApps/actions/.github/workflows/portainer-update.yml@main
     with:
       apiUrl: "https://admin.clayenkitten.ru/docker/api"
       serviceId: ${{ vars.PORTAINER_SERVICE_ID }}
