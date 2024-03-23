@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        image: [web, api]
+        image: [web, api, proxy]
     uses: ClayenApps/actions/.github/workflows/docker-ghcr.yml@main
     with:
       service: ${{ matrix.image }}

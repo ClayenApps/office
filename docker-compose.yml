@@ -1,24 +1,35 @@
 version: "3.7"
 
 services:
+  proxy:
+    container_name: ${COMPOSE_PROJECT_NAME}-proxy
+    image: ghcr.io/clayenapps/${COMPOSE_PROJECT_NAME}-proxy:latest
+    build: proxy
+    restart: unless-stopped
+    expose: [ 80 ]
+    networks: [ public, internal ]
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+
   web:
-    image: ghcr.io/clayenapps/office-web:latest
-    container_name: ${COMPOSE_PROJECT_NAME}-web
+    image: ghcr.io/clayenapps/${COMPOSE_PROJECT_NAME}-web:latest
     build: web
     restart: unless-stopped
     init: true
     expose: [ 3000 ]
     depends_on: [ api ]
-    networks: [ public ]
+    networks: [ internal ]
 
   api:
-    image: ghcr.io/clayenapps/office-api:latest
-    container_name: ${COMPOSE_PROJECT_NAME}-api
+    image: ghcr.io/clayenapps/${COMPOSE_PROJECT_NAME}-api:latest
     build: api
     restart: unless-stopped
     init: true
     expose: [ 3000 ]
-    networks: [ public, internal ]
+    networks: [ internal ]
 
   db:
     image: postgres
@@ -45,4 +56,6 @@ networks:
 
 
 volumes:
+  caddy_data:
+  caddy_config:
   db:
