@@ -1,10 +1,13 @@
-FROM oven/bun:1-alpine
+FROM node:21-bookworm
 
-WORKDIR /app
+USER node
+WORKDIR /home/node/app
+
+RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.0.35" "linux-x64-baseline"
+ENV PATH="${PATH}:/home/node/.bun/bin"
 
 COPY package.json .
 COPY bun.lockb .
-
 RUN bun install --production
 
 COPY src src
