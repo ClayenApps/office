@@ -1,19 +1,16 @@
-FROM node:20-alpine as build
+FROM oven/bun
 
 WORKDIR /app
+
 COPY package.json .
-COPY package-lock.json .
-RUN npm ci
-COPY . .
+COPY bun.lockb .
 
-RUN npm run build:ts
+RUN bun install --production
 
-FROM node:20-alpine as serve
+COPY src src
+COPY tsconfig.json .
 
-WORKDIR /app
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
-COPY package.json .
+ENV NODE_ENV production
+CMD ["bun", "src/index.ts"]
 
 EXPOSE 3000
-CMD ["npm", "start"]
