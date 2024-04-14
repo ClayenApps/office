@@ -1,0 +1,6 @@
+CREATE TABLE Users (
+    id INTEGER PRIMARY KEY GENERATED AlWAYS AS IDENTITY,
+    username VARCHAR(100) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    password_salt VARCHAR(255) NOT NULL
+);

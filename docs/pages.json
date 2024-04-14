@@ -1,0 +1,4 @@
+[
+    { "name": "Main", "url": "api.json" },
+    { "name": "Storage", "url": "storage.json" }
+]

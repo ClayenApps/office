@@ -6,4 +6,4 @@ RUN cargo build --release --bin api
 FROM debian:bookworm-slim
 WORKDIR /app
 COPY --from=build /app/target/release/api /usr/local/bin
-CMD ["api"]
+CMD ["storage"]
