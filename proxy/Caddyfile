@@ -1,0 +1,17 @@
+admin.{$DOMAIN} {
+	basicauth {
+		admin $2a$14$aYLcVNIPTuhO4HgF/4v49eKcwaroU.z1/r3C4K8Sk1ae4cE1s9X3q
+	}
+
+	handle_path /adminer/* {
+		reverse_proxy adminer:8080
+	}
+}
+
+api.{$DOMAIN} {
+	reverse_proxy api:3000
+}
+
+{$DOMAIN} {
+	reverse_proxy web:3000
+}

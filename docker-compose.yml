@@ -1,6 +1,19 @@
 version: "3.7"
 
 services:
+  proxy:
+    container_name: ${COMPOSE_PROJECT_NAME}-proxy
+    image: ghcr.io/clayenapps/${COMPOSE_PROJECT_NAME}-proxy:latest
+    build: proxy
+    restart: unless-stopped
+    ports: [ 80:80, 443:443 ]
+    networks: [ public, internal ]
+    cap_add: [ NET_ADMIN ]
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    env_file: [ "./proxy/.env" ]
+
   web:
     image: ghcr.io/clayenapps/office-web:latest
     container_name: ${COMPOSE_PROJECT_NAME}-web
@@ -46,3 +59,5 @@ networks:
 
 volumes:
   db:
+  caddy_data:
+  caddy_config:
