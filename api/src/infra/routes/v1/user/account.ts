@@ -1,7 +1,7 @@
 import { FastifyPluginAsync } from "fastify";
 import { Static, Type } from "@sinclair/typebox";
 
-const tags = ["account"];
+const tags = ["users"];
 
 const AccountPlugin: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
     const ChangeProfile = Type.Object({ name: Type.String() });

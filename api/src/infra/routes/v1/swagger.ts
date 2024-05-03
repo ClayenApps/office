@@ -19,7 +19,6 @@ const SwaggerPlugin: FastifyPluginAsync = async (fastify, opts): Promise<void> =
             ],
             tags: [
                 { name: "users", description: "User accounts" },
-                { name: "account", description: "User account" },
                 { name: "sessions", description: "User sessions" },
                 { name: "documents", description: "Documents and metadata" },
                 { name: "collaboration", description: "Collaborative editing" },

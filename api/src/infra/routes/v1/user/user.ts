@@ -6,14 +6,16 @@ import AccountPlugin from "./account.js";
 const tags = ["users"];
 
 const UserPlugin: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-    fastify.get<{ Params: IdParams; Reply: UserInfo }>(
+    fastify.get<{ Params: IdParams }>(
         "/:id",
         {
-            schema: { tags, params: IdParams }
+            schema: { tags, params: IdParams, response: { 200: UserInfo, 404: Type.Null() } }
         },
         async (request, reply) => {
             const { id } = request.params;
-            const { email, name } = await fastify.state.repositories.user.get(id);
+            const user = await fastify.state.repositories.user.get(id);
+            if (user === null) return reply.code(404).send();
+            const { email, name } = user;
             return reply.code(200).send({ id, email, name });
         }
     );

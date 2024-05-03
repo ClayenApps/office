@@ -1,15 +1,16 @@
 import { UserRepository, UserService } from "./domain/user/user.js";
-import { DocumentRepository } from "./domain/document.js";
+import { DocumentRepository } from "./domain/document/document.js";
 import { PasswordServiceArgon2 } from "./infra/password.js";
 import EmailService from "./domain/email.js";
 import { ResendEmailService } from "./infra/resend.js";
 import { EmailCodeRepository, EmailValidationService } from "./domain/user/email.js";
 import PasswordService from "./domain/password.js";
-import { EmailCodeRepositoryDb, UserRepositoryDb } from "./infra/db/user.js";
+import { EmailCodeRepositoryDb, SessionRepositoryDb, UserRepositoryDb } from "./infra/db/user.js";
 import { DocumentRepositoryDb } from "./infra/db/document.js";
 import { initORM } from "./infra/db/orm.js";
 import { FastifyPluginAsync } from "fastify";
 import { AppOptions } from "./app.js";
+import { SessionRepository } from "./domain/user/session.js";
 
 const StatePlugin: FastifyPluginAsync<AppOptions> = async (fastify, opts): Promise<void> => {
     const state = await getState();
@@ -29,8 +30,9 @@ async function getRepositories() {
     const orm = await initORM();
     const document: DocumentRepository = new DocumentRepositoryDb(orm);
     const user: UserRepository = new UserRepositoryDb(orm);
+    const session: SessionRepository = new SessionRepositoryDb(orm);
     const emailValidation: EmailCodeRepository = new EmailCodeRepositoryDb(orm);
-    return { document, user, emailValidation };
+    return { document, user, session, emailValidation };
 }
 
 function getServices(repositories: Repositories) {
@@ -40,7 +42,12 @@ function getServices(repositories: Repositories) {
         repositories.emailValidation
     );
     const password: PasswordService = new PasswordServiceArgon2();
-    const user: UserService = new UserService(emailValidation, password, repositories.user);
+    const user: UserService = new UserService(
+        emailValidation,
+        password,
+        repositories.user,
+        repositories.session
+    );
     return {
         email,
         emailValidation,

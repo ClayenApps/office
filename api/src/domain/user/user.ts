@@ -1,11 +1,14 @@
+import { randomInt } from "crypto";
 import PasswordService from "../password.js";
 import { EmailValidationService } from "./email.js";
+import { Session, SessionRepository } from "./session.js";
 
 export class User {
     constructor(
         public id: number,
         public name: string,
-        public email: string
+        public email: string,
+        public passwordHash: string
     ) {}
 }
 
@@ -13,7 +16,8 @@ export class UserService {
     constructor(
         private emailValidationService: EmailValidationService,
         private passwordService: PasswordService,
-        private repository: UserRepository
+        private repository: UserRepository,
+        private sessionRepo: SessionRepository
     ) {}
 
     public async register(
@@ -34,7 +38,13 @@ export class UserService {
         return user;
     }
 
-    public login() {}
+    public async login(email: string, password: string): Promise<Session | null> {
+        let user = await this.repository.getByEmail(email);
+        if (user === null) return null;
+        let valid = await this.passwordService.verify(password, user.passwordHash);
+        if (!valid) return null;
+        return await this.sessionRepo.create(user);
+    }
 }
 
 export type CredentialsHashed = {
@@ -44,7 +54,8 @@ export type CredentialsHashed = {
 };
 
 export interface UserRepository {
-    get(id: number): Promise<User>;
-    create(user: CredentialsHashed): Promise<User>;
+    get(id: number): Promise<User | null>;
+    getByEmail(email: string): Promise<User | null>;
+    create(credentials: CredentialsHashed): Promise<User>;
     isVacant(email: string, name: string): Promise<boolean>;
 }

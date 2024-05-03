@@ -1,4 +1,4 @@
-import { User } from "./user/user.js";
+import { User } from "../user/user.js";
 
 export class Document {
     constructor(
@@ -11,12 +11,13 @@ export class Document {
 export class Metadata {
     constructor(
         public title: string,
+        public createdAt: Date,
         public owner: User
     ) {}
 }
 
 export interface DocumentRepository {
-    get(id: number): Promise<Document>;
+    get(id: number): Promise<Document | null>;
     create(document: Omit<Document, "id">): Promise<void>;
     update(document: Document): Promise<void>;
     delete(id: number): Promise<void>;

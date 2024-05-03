@@ -4,16 +4,24 @@ import { Static, Type } from "@sinclair/typebox";
 const tags = ["sessions"];
 
 export const SessionPlugin: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
-    fastify.post(
+    fastify.post<{ Body: LoginInfo }>(
         "/",
         {
             schema: {
                 description: "Creates new session for the user",
+                body: LoginInfo,
+                response: {
+                    201: Type.Number(),
+                    400: Type.Null()
+                },
                 tags
             }
         },
         async (request, reply) => {
-            return reply.code(201).send();
+            const { email, password } = request.body;
+            let result = await fastify.state.services.user.login(email, password);
+            if (result === null) return reply.code(400).send();
+            return reply.code(201).send(result.id);
         }
     );
     fastify.get(
@@ -70,5 +78,11 @@ type UserInfo = Static<typeof UserInfo>;
 
 const SessionInfo = Type.Object({ user: UserInfo });
 type SessionInfo = Static<typeof SessionInfo>;
+
+const LoginInfo = Type.Object({
+    email: Type.String({ format: "email" }),
+    password: Type.String()
+});
+type LoginInfo = Static<typeof LoginInfo>;
 
 export default SessionPlugin;

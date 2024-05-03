@@ -1,4 +1,4 @@
-import { User } from "./user/user.js";
+import { User } from "./user.js";
 
 export class Session {
     constructor(public id: number, public user: User) {}
@@ -6,7 +6,7 @@ export class Session {
 
 export interface SessionRepository {
     isValid(session: Session): Promise<boolean>;
-    getAll(user: User): Promise<Session>;
-    create(user: User): Promise<void>;
+    getAll(user: User): Promise<Session[]>;
+    create(user: User): Promise<Session>;
     delete(id: number): Promise<void>;
 }
