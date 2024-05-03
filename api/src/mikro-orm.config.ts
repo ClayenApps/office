@@ -4,8 +4,8 @@ import { entities } from "./infra/db/entities.js";
 
 const config: Options = {
     driver: PostgreSqlDriver,
+    host: process.env.DB_HOST!,
     dbName: process.env.POSTGRES_DB!,
-    host: "db",
     user: process.env.POSTGRES_USER!,
     password: process.env.POSTGRES_PASSWORD!,
     entities,

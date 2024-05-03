@@ -32,6 +32,7 @@ services:
     env_file: [ ./api/.env ]
     init: true
     expose: [ 3000 ]
+    depends_on: [ db ]
     networks: [ public, internal ]
 
   db:
