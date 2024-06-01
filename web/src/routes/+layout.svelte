@@ -44,16 +44,6 @@
             </ul>
         </section>
         <section>
-            <h2>Powered by</h2>
-            <ul>
-                <li><a href="https://svelte.dev">Svelte</a></li>
-                <li><a href="https://fastify.dev">Fastify</a></li>
-                <li><a href="https://caddyserver.com">Caddy</a></li>
-                <li><a href="https://www.docker.com">Docker</a></li>
-                <li><a href="https://firstbyte.ru">FirstByte</a></li>
-            </ul>
-        </section>
-        <section>
             <h2>See also</h2>
             <ul>
                 <li><a href="https://clayenkitten.ru">Personal website</a></li>
